@@ -40,11 +40,15 @@ shinyUI(fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-        h3("Player Statistics"),
-        tableOutput("average_stats"),
-        h3("Player Strength Chart", align = "left"),
-        plotOutput("radarchart"),
-        htmlOutput("text2")
+        tabsetPanel(type = "tabs", 
+                tabPanel("Main",
+                h3("Player Statistics"),
+                tableOutput("average_stats"),
+                h3("Player Strength Chart", align = "left"),
+                plotOutput("radarchart"),
+                htmlOutput("text2")),
+                
+                tabPanel("Documentation", htmlOutput("text3")))
         
     )
   )

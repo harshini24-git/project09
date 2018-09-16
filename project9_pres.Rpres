@@ -1,11 +1,10 @@
-Shiny Application and Reproducible Pitch:
-
 Average NBA Player Statistics of the 2017-2018 Regular Season 
 ========================================================
 author: Joseph Fabia
 date: September 16, 2018
-autosize: true
-transition: 
+transition: rotate
+
+
 
 Overview
 ========================================================

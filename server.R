@@ -98,6 +98,32 @@ shinyServer(function(input, output) {
           HTML(paste(textName))
           
   })
+
+  output$text3 <- renderUI({
+          
+          textName <- paste("<b>Documentation</b>",
+                            "<br> ", 
+                            "This shiny app is used to evaluate an NBA Player's
+                            average statistics per game across nine categories. Six of
+                                these categories are counting stats - Points, Rebounds,
+                                Assists, Steals, Blocks and Three-pointers made. The
+                                remaining categores are Efficiency stats - Field Goal
+                                Percentage, Free Throw Percentage and Turnovers. The
+                            user should select the NBA player from the drop down menu.
+                            <br><br>
+                            Once the user selects a player from the drop down menu,
+                            the following are displayed:<br>
+                            - Some biographical information of the NBA player, including 
+                            team, position, date of birth, height and weight;<br>
+                            - Average statistics per game, including overall rank relative to
+                            the league; <<br>
+                            - A radar chart that determines the player's strengths based on his
+                            statistics."
+                           )
+          
+          HTML(paste(textName))
+          
+  })
   
   
 })
