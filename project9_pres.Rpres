@@ -1,0 +1,111 @@
+Shiny Application and Reproducible Pitch:
+
+Average NBA Player Statistics of the 2017-2018 Regular Season 
+========================================================
+author: Joseph Fabia
+date: September 16, 2018
+autosize: true
+transition: 
+
+Overview
+========================================================
+<font size = "5">
+This presentation serves as pitch for a Shiny App that was created for the Developing Data Products online course in Coursera. The application is available at this [link], while the source code of the app is available at this [link](google.com). 
+
+The inspiration for this project was my interest in Fantasy Basketball, which is based on statistical performance of NBA players. The shiny application is designed to provide the user a statistical overview of the an NBA player's performance during the 2017-2018 regular season. The app will prompt the user t select a player from a drop-down list of players who played. Once the user selects, the app will list out the following information:
+- biographical information of the player (team, position, date of birth, height, weight)
+- his per-game statistical averages across nine stat categories
+- his rank relative to the players who were active during the 2017-2018 regular season
+- a radar chart representing that player's statistical strengths relative to all other players
+</font>
+
+The Data
+========================================================
+<font size = "5">
+Data is based on the 2017-2018 regular season total statistics data, which was retrieved from  [Basketball Reference](https://www.basketball-reference.com/). 
+
+In order to scrape this data, the nbastatR package by [Alex Bresler](https://www.rdocumentation.org/collaborators/name/Alex%20Bresler) was used. Documentation to use this package is found [here](https://www.rdocumentation.org/packages/nbastatR/versions/0.1.110202031), and the actual code to retrieve this data is found [here](github link) for reference.
+
+Because the data is based on total statistics in the season, it had to be transformed into average statistics. Some data cleanup was required to remove duplicates or NA values. 
+
+In order to rank a player's statistical strength, a player's Standard Score for each stat category was calculated. More information on the Standard Score approach can be found [here](https://en.wikipedia.org/wiki/Standard_score). Also, in order to apply Standard Scoring to Field Goal Efficiency and Free Throw Efficiency, these had to be transformed into counting variables, the methods which are described in this [blog post](http://statdance.blogspot.com/2014/01/how-do-espn-and-yahoo-rank-fantasy.html) by [Michael Muskett](https://plus.google.com/117257364176035644864), and this [reddit link](https://www.reddit.com/r/fantasybball/comments/71bdq0/how_to_calculate_weighted_zscore_for_fg/dn9javm/) by reddit user [nwsy96](https://www.reddit.com/user/nwsy96).
+
+The actual code used to transform, clean and rank the data is found [here](insert link)
+
+</font>
+
+Some Reproducible Code
+========================================================
+<font size = '4'>
+The following tables demonstrate how far the top 150 players are from the rest of the population based on the five known statistics: Points, Rebounds, Assists, Steals and Blocks.</font><br>
+<font size = '4'>
+```{r echo=FALSE}
+avg <- readRDS("data/data_9cat_avg_2018.rds")
+zscore_avg <- readRDS("data/zscore_9cat_avg_2018.rds")
+paste("Top 150 Players")
+```
+```{r echo=TRUE}
+summary(avg[1:150,c("PTS","REB","AST","STL","BLK")])
+```
+</font>
+*** 
+<font size = '4'>
+```{r echo=FALSE}
+paste("Entire League of Active Players")
+```
+```{r echo=TRUE}
+summary(avg[,c("PTS","REB","AST","STL","BLK")])
+```
+</font>
+
+Radar Charts for Statistical Strengths
+========================================================
+<font size = '4'>
+The application will generate radar charts that assess the strengths of a selected player, as seen in the example below. The examples show that LeBron Jame's strengths are his shooting efficiency (FGP) and passing ability (AST), while Stephen Curry's strength is his 3-point shooting (3PM). </font>
+<br><br>
+<font size = '4'>
+```{r, echo=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
+require(plotly)
+require(fmsb)
+zmin01 <- 
+        data.frame(matrix(unlist(lapply(zscore_avg[,2:10], min)),nrow = 1))
+colnames(zmin01) <- c("FGP","FTP","3PM","PTS","REB","AST","STL","BLK","TOV")
+
+zmax01 <- 
+        data.frame(matrix(unlist(lapply(zscore_avg[,2:10], max)),nrow = 1))
+colnames(zmax01) <- c("FGP","FTP","3PM","PTS","REB","AST","STL","BLK","TOV")
+
+zplayer01 <- 
+        zscore_avg[which(zscore_avg$Player == 'LeBron James'),2:10]
+colnames(zplayer01) <- c("FGP","FTP","3PM","PTS","REB","AST","STL","BLK","TOV")
+
+data01 <- NULL
+data01 <- rbind(
+        zmax01,
+        zmin01,
+        zplayer01
+)
+
+# Spider Charting
+radarchart(data01, title = "9-Cat Strengths: LeBron James")
+
+```
+*** 
+<br><br><br><br><br><br><br><br>
+```{r, echo=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
+require(plotly)
+require(fmsb)
+zplayer02 <- 
+        zscore_avg[which(zscore_avg$Player == 'Stephen Curry'),2:10]
+colnames(zplayer02) <- c("FGP","FTP","3PM","PTS","REB","AST","STL","BLK","TOV")
+
+data02 <- NULL
+data02 <- rbind(
+        zmax01,
+        zmin01,
+        zplayer02
+)
+
+# Spider Charting
+radarchart(data02,  title = "9-Cat Strengths: Stephen Curry")
+```

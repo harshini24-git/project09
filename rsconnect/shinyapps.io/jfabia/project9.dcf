@@ -1,0 +1,12 @@
+name: project9
+title: project9
+username:
+account: jfabia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 448715
+bundleId: 1587940
+url: https://jfabia.shinyapps.io/project9/
+when: 1537089775.10852
+asMultiple: FALSE
+asStatic: FALSE
